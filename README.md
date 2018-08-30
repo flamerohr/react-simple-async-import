@@ -24,7 +24,7 @@ const options = {
 const MySection = composeDynamicImport(options);
 ```
 
-It is important ot return a Promise (with result) in the `load` callback. This ensures that the composed component can capture the imported result.
+It is important to return a Promise (with result) or the result without Promise in the `load` callback. This ensures that the composed component can capture the imported result.
 
 The result can be in the `default` key as with ES6 `export default` behaviour, or the actual component but just make it doesn't have a default key.
 
