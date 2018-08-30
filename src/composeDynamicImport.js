@@ -4,7 +4,7 @@ const noop = () => null;
 
 const composeDynamicImport = (options) => {
   const load = options.load;
-  const refresh = options.refresh;
+  const refresh = options.refresh || noop;
   const initial = options.initial || noop;
 
   class DynamicImportComposer extends Component {
