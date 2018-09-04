@@ -35,3 +35,4 @@ The result can be in the `default` key as with ES6 `export default` behaviour, o
 | `load` | function | (required) | The loading function to call when the target component is needed, the function is passed in the Component's `props` at the time - this could help choose a set of components if desired |
 | `refresh` | function | `null` | A function that is called to setup a way to call the "load" function again - the aim is to enable hot-loading the component, the function is passed a `callback` which should be called when refresh needs to happen |
 | `loading` | Component | `null` | The loading component to use when loading the target component asynchronously, such as a loading screen or icon |
+| `error` | Component | `null` | The error component to use when loading encounters an error, such as a "retry" screen |

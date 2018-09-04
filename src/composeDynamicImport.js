@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 const noop = () => null;
 
-const composeDynamicImport = (options) => {
+const composeDynamicImport = options => {
   const load = options.load;
   const refresh = options.refresh || noop;
   const loading = options.loading || noop;
+  const error = options.error || noop;
 
   class DynamicImportComposer extends Component {
     constructor(props) {
@@ -16,7 +17,8 @@ const composeDynamicImport = (options) => {
 
       this.state = {
         Imported: loading,
-        loading: false
+        loading: false,
+        error: null
       };
 
       refresh(this.loadImport, props);
@@ -27,7 +29,7 @@ const composeDynamicImport = (options) => {
     }
 
     saveImport(result) {
-      this.setState({ loading: false });
+      this.setState({ loading: false, error: null });
       if (!result) {
         return;
       }
@@ -39,11 +41,20 @@ const composeDynamicImport = (options) => {
     }
 
     loadImport() {
-      this.setState({ loading: true });
-      Promise.resolve(load(this.props)).then(this.saveImport);
+      this.setState({ loading: true, error: null });
+      Promise.resolve(load(this.props))
+        .then(this.saveImport)
+        .catch(e => {
+          this.setState({ error: e.toString() });
+        });
     }
 
     render() {
+      if (this.state.error) {
+        const Error = error;
+
+        return <Error {...this.props} error={this.state.error} />
+      }
       const Imported = this.state.loading ? loading : this.state.Imported;
 
       return <Imported {...this.props} />;
