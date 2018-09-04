@@ -27,11 +27,11 @@ const composeDynamicImport = (options) => {
       if (!result) {
         return;
       }
-      if (!result.default) {
-        this.setState({ Imported: result });
+      if (result.default) {
+        this.setState({ Imported: result.default });
         return;
       }
-      this.setState({ Imported: result.default });
+      this.setState({ Imported: result });
     }
 
     loadImport() {
