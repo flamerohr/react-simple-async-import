@@ -21,10 +21,13 @@ const composeDynamicImport = options => {
         error: null
       };
 
+      this.started = false;
+
       refresh(this.loadImport, props);
     }
 
     componentWillMount() {
+      this.started = true;
       this.loadImport();
     }
 
@@ -41,6 +44,10 @@ const composeDynamicImport = options => {
     }
 
     loadImport() {
+      if (!this.started) {
+        console.warn('`refresh` option triggered before DynamicImport has mounted');
+        return;
+      }
       this.setState({ loading: true, error: null });
       Promise.resolve(load(this.props))
         .then(this.saveImport)
