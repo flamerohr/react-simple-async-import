@@ -14,11 +14,14 @@ export function composeDynamicImport({
   refresh = noop,
   placeholder = null,
 }) {
+  let initialComponent = lazy(load);
+
   function DynamicImport(props, ref) {
-    const [Component, setComponent] = useState(lazy(load));
+    const [Component, setComponent] = useState(initialComponent);
 
     const renewComponent = useCallback(() => {
-      setComponent(lazy(load));
+      initialComponent = lazy(load);
+      setComponent(initialComponent);
     }, [setComponent]);
 
     useEffect(() => {
