@@ -18,15 +18,16 @@ The basic gist of the composition will look like this:
 import composeDynamicImport from 'react-simple-async-import';
 
 const options = {
-  load: (props) => import('../components/Dashboard'),
-  refresh: (callback) => module.hot.accept('../components/Dashboard', callback),
+  load: () => import('./components/Dashboard'),
+  refresh: module.hot && (load => module.hot.accept('./components/Dashboard', load)),
+  placeholder: <Placeholder />,
 };
 const MySection = composeDynamicImport(options);
 ```
 
-It is important to return a Promise (with result) or the result without Promise in the `load` callback. This ensures that the composed component can capture the imported result.
+It is important to return a Promise with result in the `load` callback. This ensures that the composed component can capture the imported result.
 
-The result can be in the `default` key as with ES6 `export default` behaviour, or the actual component but just make it doesn't have a default key.
+The result should be in the `default` key following the ES6 `export default` behaviour, this is because we use `React.lazy` under the hood to lazily load the component for us.
 
 ## Available options
 
@@ -34,5 +35,8 @@ The result can be in the `default` key as with ES6 `export default` behaviour, o
 |--- | :---: | :---: | --- |
 | `load` | function | (required) | The loading function to call when the target component is needed, the function is passed in the Component's `props` at the time - this could help choose a set of components if desired |
 | `refresh` | function | `null` | A function that is called to setup a way to call the "load" function again - the aim is to enable hot-loading the component, the function is passed a `callback` which should be called when refresh needs to happen |
-| `loading` | Component | `null` | The loading component to use when loading the target component asynchronously, such as a loading screen or icon |
-| `error` | Component | `null` | The error component to use when loading encounters an error, such as a "retry" screen |
+| `placeholder` | Text or Rendered component | `null` | The loading component to use when loading the target component, such as a loading text or icon, in the form of `<Placeholder />` |
+
+## Note
+
+I had originally planned to have an `error` option as well, but it made more sense to use `ErrorBoundary` outside this component. I may reconsider as time moves on.
